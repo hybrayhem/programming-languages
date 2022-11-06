@@ -352,8 +352,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 5
-#define YY_END_OF_BUFFER 6
+#define YY_NUM_RULES 4
+#define YY_END_OF_BUFFER 5
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -363,7 +363,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[9] =
     {   0,
-        0,    0,    6,    3,    4,    2,    1,    0
+        0,    0,    5,    3,    4,    2,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -755,20 +755,16 @@ YY_RULE_SETUP
 #line 33 "gpp_lexer.l"
 {printf("%s not a capital letter\n", yytext);}
 	YY_BREAK
-case 4:
-/* rule 4 can match eol */
-YY_RULE_SETUP
+case YY_STATE_EOF(INITIAL):
 #line 34 "gpp_lexer.l"
 {return 0;}
 	YY_BREAK
-case 5:
+case 4:
 YY_RULE_SETUP
 #line 35 "gpp_lexer.l"
 ECHO;
 	YY_BREAK
-#line 770 "gpp_lexer.c"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+#line 768 "gpp_lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1783,10 +1779,8 @@ int main(int argc, char *argv[]) {
         printf("argv[%d] = %s\n", i, argv[i]);
     }
     
-    while(getchar() != EOF) {
-        yylex();
-        printf("\ncapital letter number = %d\n", count);
-    }
+    yylex();
+    printf("\ncapital letter number = %d\n", count);
 
     // TODO: exit with CTRL+D
     return 0;

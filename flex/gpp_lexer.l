@@ -31,7 +31,7 @@ int count = 0;
 [A-Z] {printf("%s capital letter\n", yytext);
        count++;}
 .     {printf("%s not a capital letter\n", yytext);}
-\n    {return 0;}
+EOF   {return 0;}
 %%
 
 
@@ -43,11 +43,8 @@ int main(int argc, char *argv[]) {
         printf("argv[%d] = %s\n", i, argv[i]);
     }
     
-    while(getchar() != EOF) {
-        yylex();
-        printf("\ncapital letter number = %d\n", count);
-    }
+    yylex();
+    printf("\ncapital letter number = %d\n", count);
 
-    // TODO: exit with CTRL+D
     return 0;
 }
