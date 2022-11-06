@@ -1,11 +1,11 @@
 LEX = lex # not flex
 
-target: build run
+target: run
 
 build:
 	@echo "Building lexer"
-	$(LEX) gpp_lexer.l
-	$(CC) lex.yy.c -o gpp -lfl
+	$(LEX) -o gpp_lexer.c gpp_lexer.l
+	$(CC) gpp_lexer.c -o gpp -lfl
 
 run: build
 	@echo "Running lexer"

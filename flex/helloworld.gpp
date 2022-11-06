@@ -1,0 +1,17 @@
+;; helloworld.gpp
+(deffun sumup (x)
+(if (equal x 0)
+1
+(+ x (sumup (- x 1)))
+)
+)
+
+;; COMMENT
+;; OP_OP
+;; KW_DEFFUN
+;; IDENTIFIER
+;; OP_OP
+;; IDENTIFIER
+;; OP_CP
+;; OP_OP
+;; ....
