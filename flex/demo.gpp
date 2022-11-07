@@ -1,4 +1,4 @@
-;; helloworld.gpp
+;; demo.gpp
 (deffun sumup (x)
 (if (equal x 0)
 1

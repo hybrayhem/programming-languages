@@ -1,3 +1,7 @@
+DIGIT			[0-9]
+LETTER			[a-zA-Z_]
+ALPHANUMERIC    ({LETTER}|{DIGIT})
+
 %{
 /*
 The G++ Language
@@ -20,31 +24,118 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 
 */
 
-// Definitions
-int count = 0;
+// Declarations
+#include <stdio.h>
+#include <stdlib.h>
+
+FILE *src;
+
+void lex_print(char*);
+void is_string();
+void lex_error(char*);
 %}
 
 
 %%
-[pattern]  { /* code */ }
+";;"[^\n]*      { lex_print("COMMENT");  /* Comments */ }
 
-[A-Z] {printf("%s capital letter\n", yytext);
-       count++;}
-.     {printf("%s not a capital letter\n", yytext);}
-EOF   {return 0;}
+"and"           { lex_print("KW_AND");  /* Keywords */ }
+"or"            { lex_print("KW_OR"); }
+"not"           { lex_print("KW_NOT"); }
+"equal"         { lex_print("KW_EQUAL"); }
+"less"          { lex_print("KW_LESS"); }
+"nil"           { lex_print("KW_NIL"); }
+"list"          { lex_print("KW_LIST"); }
+"append"        { lex_print("KW_APPEND"); }
+"concat"        { lex_print("KW_CONCAT"); }
+"set"           { lex_print("KW_SET"); }
+"deffun"        { lex_print("KW_DEFFUN"); }
+"for"           { lex_print("KW_FOR"); }
+"if"            { lex_print("KW_IF"); }
+"exit"          { lex_print("KW_EXIT"); }
+"load"          { lex_print("KW_LOAD"); }
+"disp"          { lex_print("KW_DISP"); }
+"true"          { lex_print("KW_TRUE"); }
+"false"         { lex_print("KW_FALSE"); }
+
+"+"             { lex_print("OP_PLUS");  /* Operators */ }
+"-"             { lex_print("OP_MINUS"); }
+"/"             { lex_print("OP_DIV"); }
+"*"             { lex_print("OP_MULT"); }
+"("             { lex_print("OP_OP"); }
+")"             { lex_print("OP_CP"); }
+"**"            { lex_print("OP_DBLMULT"); }
+","             { lex_print("OP_COMMA"); }
+
+"\""	        { is_string(); /* Strings */ }
+LETTER?\"(\\.|[^\\"\n])*\"	{ lex_print("STRING_LITERAL"); }
+
+[{LETTER}][{LETTER}0-9]*  { lex_print("IDENTIFIER");  /* Identifiers */ }
+
+[ \t\n]+        { /* remove whitespace */ }
+<<EOF>>         { return 0; /* End */ }
+.               { lex_print("Unrecognized token"); /* Other */ }
 %%
 
+void lex_print(char *name) {
+    printf("%s : %s\n", yytext, name);
+}
+
+void is_string() {
+	char c, prev = 0;
+
+    lex_print("OP_OC");
+
+	while ((c = input()) != EOF) {
+        if(c != '"') printf("%c", c);
+		if (c == '"' && prev != '\\') {
+            printf(": VALUESTR\n");
+			return lex_print("OP_CC");
+        }
+		prev = c;
+	}
+	lex_error("Not ending string");
+}
+
+void lex_error(char *msg) {
+    printf("Lexical Error: %s\n", msg);
+}
 
 // Runs after lex initialization
-int yywrap(){}
+int yywrap(){
+    return 1;
+}
 int main(int argc, char *argv[]) {
     int i;
     for(i = 0; i < argc; i++) {
         printf("argv[%d] = %s\n", i, argv[i]);
     }
+
+    printf("here0");
+    if(argc > 1) {
+        for(i = 1; i < argc; i++) {
+            printf("here0.5");
+            src = fopen(argv[i], "r");
+            if (src == NULL) {
+                printf("Couldn't open file: %s\n", argv[i]);
+                continue;
+            }
+            
+            printf("\n\n\nLexing %s...\n\n", argv[i]);
+
+            yyin = src;
+            yylex();
+            fclose(src);
+
+            printf("\n");
+        }
+        printf("here1");
+    }
     
+    // REPL
+    printf("here2");
+    yyin = stdin;
     yylex();
-    printf("\ncapital letter number = %d\n", count);
 
     return 0;
 }

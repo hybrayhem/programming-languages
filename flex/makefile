@@ -17,4 +17,4 @@ run: build
 
 .PHONY: clean
 clean:
-	$(RM) *.o lex.yy.c
+	$(RM) *.o *.c gpp
