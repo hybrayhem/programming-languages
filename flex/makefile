@@ -11,9 +11,9 @@ run: build
 	@echo "Running lexer"
 	./gpp
 
-# demo: build
-#	@echo "Running lexer with demo program"
-#	./gpp < demo.gpp
+demo: build
+	@echo "Running lexer with demo program"
+	./gpp demo.gpp
 
 .PHONY: clean
 clean:

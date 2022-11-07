@@ -29,9 +29,11 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 #include <stdlib.h>
 
 FILE *src;
+int is_quote_open = 0;
 
 void lex_print(char*);
-void is_string();
+void check_quotes();
+// void is_string();
 void lex_error(char*);
 %}
 
@@ -67,19 +69,28 @@ void lex_error(char*);
 "**"            { lex_print("OP_DBLMULT"); }
 ","             { lex_print("OP_COMMA"); }
 
-"\""	                { is_string(); /* Strings */ }
+"\""	        { 
+                    if(!is_quote_open) {
+                        is_quote_open = 1;
+                        lex_print("OP_OC");
+                    } else {
+                        is_quote_open = 0;
+                        lex_print("OP_CC");
+                    }
+                }
+((\\.|[^\\"])*\")     { lex_print("VALUESTR"); /* Strings */ }
 
-[a-zA-Z_][a-zA-Z0-9_]*    { lex_print("IDENTIFIER");  /* Identifier */ }
-[1-9][0-9]*|[0-9]    { lex_print("VALUEI");  /* Unsigned integer */ }
-([1-9][0-9]*)+f([1-9][0-9]*)+    { lex_print("VALUEF");  /* Unsigned fractions */ }
+[a-zA-Z_][a-zA-Z0-9_]*          { lex_print("IDENTIFIER");  /* Identifier */ }
+[1-9][0-9]*|[0-9]               { lex_print("VALUEI");  /* Unsigned integer */ }
+([1-9][0-9]*)+f([1-9][0-9]*)+   { lex_print("VALUEF");  /* Unsigned fractions */ }
 
-[ \t\n]+        { /* remove whitespace */ }
-<<EOF>>         { yyterminate(); /* End */ }
+[ \t\n]+                        { /* remove whitespace */ }
+<<EOF>>                         { check_quotes(); yyterminate(); /* End */ }    
 
-[0]+[0-9]+                  { lex_error("Invalid integer"); }
-([0][0-9]*)f([0]+[0-9]*)     { lex_error("Invalid fraction"); }
-[0-9]+[a-zA-Z_]+            { lex_error("Invalid identifier"); }
-.               { lex_error("unrecognized token"); /* Other */ }
+[0]+[0-9]+                      { lex_error("Invalid integer"); }
+([0][0-9]*)f([0]+[0-9]*)        { lex_error("Invalid fraction"); }
+[0-9]+[a-zA-Z_]+                { lex_error("Invalid identifier"); }
+.                               { lex_error("Unrecognized token"); /* Other */ }
 %%
 
 void lex_print(char *name) {
@@ -87,23 +98,54 @@ void lex_print(char *name) {
 }
 
 void is_string() {
-	char c, prev = 0;
+	char c, prev = 0, *ap, input, *apb = NULL;
+    int i, counter = 0;
 
     lex_print("OP_OC");
 
-	while ((c = input()) != EOF) {
+    // do {
+    //     fscanf(stdin, "%c", &input);
+    //     counter++;
+
+    //     if(input == '"' && counter > 1 && ap[counter - 2] != '\\') {
+    //         printf("%s : VALUESTR\n", ap);
+	// 		return lex_print("OP_CC");
+    //     }
+
+    //     ap = (char *)malloc((counter + 1) * sizeof(char));
+    //     if(ap == NULL) return printf("Out of memory.\n");
+    //     for (i = 0; i < counter - 1; i++) {
+    //         ap[i] = apb[i];
+    //     }
+    //     ap[counter - 1] = input;
+
+    //     if (apb != NULL)
+    //         free(apb);
+    //     apb = ap;
+
+    // } while (!feof(stdin));
+
+	/*while ((c = input()) != EOF) {
         if(c != '"') printf("%c", c);
+
 		if (c == '"' && prev != '\\') {
             printf(": VALUESTR\n");
 			return lex_print("OP_CC");
         }
 		prev = c;
-	}
+	}*/
+
 	lex_error("Not ending string");
 }
 
 void lex_error(char *msg) {
-    printf("Lexical Error: %s.\n", msg);
+    printf("Lexical Error. %s: %s.\n", msg, yytext);
+}
+
+void check_quotes() {
+    if(is_quote_open) {
+        lex_error("Not ending string");
+    }
 }
 
 // Runs after lex initialization
@@ -116,10 +158,8 @@ int main(int argc, char *argv[]) {
         printf("argv[%d] = %s\n", i, argv[i]);
     }
 
-    printf("here0");
     if(argc > 1) {
         for(i = 1; i < argc; i++) {
-            printf("here0.5");
             src = fopen(argv[i], "r");
             if (src == NULL) {
                 printf("Couldn't open file: %s\n", argv[i]);
@@ -134,11 +174,9 @@ int main(int argc, char *argv[]) {
 
             printf("\n");
         }
-        printf("here1");
     }
     
     // REPL
-    printf("here2");
     yyin = stdin;
     yylex();
 
