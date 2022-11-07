@@ -33,7 +33,7 @@ int is_quote_open = 0;
 
 void lex_print(char*);
 void check_quotes();
-// void is_string();
+void is_string();
 void lex_error(char*);
 %}
 
@@ -69,16 +69,7 @@ void lex_error(char*);
 "**"            { lex_print("OP_DBLMULT"); }
 ","             { lex_print("OP_COMMA"); }
 
-"\""	        { 
-                    if(!is_quote_open) {
-                        is_quote_open = 1;
-                        lex_print("OP_OC");
-                    } else {
-                        is_quote_open = 0;
-                        lex_print("OP_CC");
-                    }
-                }
-((\\.|[^\\"])*\")     { lex_print("VALUESTR"); /* Strings */ }
+"\""	        { is_string(); /* Strings */ }
 
 [a-zA-Z_][a-zA-Z0-9_]*          { lex_print("IDENTIFIER");  /* Identifier */ }
 [1-9][0-9]*|[0-9]               { lex_print("VALUEI");  /* Unsigned integer */ }
@@ -98,34 +89,12 @@ void lex_print(char *name) {
 }
 
 void is_string() {
-	char c, prev = 0, *ap, input, *apb = NULL;
+	char c, prev = 0;
     int i, counter = 0;
 
     lex_print("OP_OC");
 
-    // do {
-    //     fscanf(stdin, "%c", &input);
-    //     counter++;
-
-    //     if(input == '"' && counter > 1 && ap[counter - 2] != '\\') {
-    //         printf("%s : VALUESTR\n", ap);
-	// 		return lex_print("OP_CC");
-    //     }
-
-    //     ap = (char *)malloc((counter + 1) * sizeof(char));
-    //     if(ap == NULL) return printf("Out of memory.\n");
-    //     for (i = 0; i < counter - 1; i++) {
-    //         ap[i] = apb[i];
-    //     }
-    //     ap[counter - 1] = input;
-
-    //     if (apb != NULL)
-    //         free(apb);
-    //     apb = ap;
-
-    // } while (!feof(stdin));
-
-	/*while ((c = input()) != EOF) {
+	while ((c = input()) != '\n') {
         if(c != '"') printf("%c", c);
 
 		if (c == '"' && prev != '\\') {
@@ -133,13 +102,12 @@ void is_string() {
 			return lex_print("OP_CC");
         }
 		prev = c;
-	}*/
-
+	}
 	lex_error("Not ending string");
 }
 
 void lex_error(char *msg) {
-    printf("Lexical Error. %s: %s.\n", msg, yytext);
+    printf("\nLexical Error. %s: %s.\n", msg, yytext);
 }
 
 void check_quotes() {
