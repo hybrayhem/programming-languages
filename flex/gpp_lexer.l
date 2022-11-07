@@ -29,10 +29,11 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 #include <stdlib.h>
 
 FILE *src;
-int is_quote_open = 0;
+int filecount;
+// int is_quote_open = 0;
 
 void lex_print(char*);
-void check_quotes();
+// void check_quotes();
 void is_string();
 void lex_error(char*);
 %}
@@ -73,15 +74,28 @@ void lex_error(char*);
 
 [a-zA-Z_][a-zA-Z0-9_]*          { lex_print("IDENTIFIER");  /* Identifier */ }
 [1-9][0-9]*|[0-9]               { lex_print("VALUEI");  /* Unsigned integer */ }
-([1-9][0-9]*)+f([1-9][0-9]*)+   { lex_print("VALUEF");  /* Unsigned fractions */ }
+([1-9][0-9]*|[0-9])f([1-9][0-9]*|[0-9])   { lex_print("VALUEF");  /* Unsigned fractions */ }
 
 [ \t\n]+                        { /* remove whitespace */ }
-<<EOF>>                         { check_quotes(); yyterminate(); /* End */ }    
+<<EOF>>                         { 
+                                    /* End */
+                                    // printf("filecount %d\n", filecount);
+                                    if(filecount > 0){
+                                        filecount--;
+                                    }
+                                    else{
+                                        yyin=stdin;
+                                        YY_NEW_FILE;
+                                    }
+                                        
+                                }    
 
-[0]+[0-9]+                      { lex_error("Invalid integer"); }
-([0][0-9]*)f([0]+[0-9]*)        { lex_error("Invalid fraction"); }
-[0-9]+[a-zA-Z_]+                { lex_error("Invalid identifier"); }
-.                               { lex_error("Unrecognized token"); /* Other */ }
+[0]+[0-9]+                       { lex_error("Invalid integer"); }
+[0-9]+[a-zA-Z_]+                 { lex_error("Invalid identifier"); }
+([0]+[0-9]+)f([1-9][0-9]*|[0-9]) { lex_error("Invalid fraction"); }
+([1-9][0-9]*|[0-9])f([0]+[0-9]+) { lex_error("Invalid fraction"); }
+
+.                                { lex_error("Unrecognized token"); /* Other */ }
 %%
 
 void lex_print(char *name) {
@@ -107,14 +121,14 @@ void is_string() {
 }
 
 void lex_error(char *msg) {
-    printf("\nLexical Error. %s: %s.\n", msg, yytext);
+    printf("Lexical Error. %s: '%s'.\n", msg, yytext);
 }
 
-void check_quotes() {
-    if(is_quote_open) {
-        lex_error("Not ending string");
-    }
-}
+// void check_quotes() {
+//     if(is_quote_open) {
+//         lex_error("Not ending string");
+//     }
+// }
 
 // Runs after lex initialization
 int yywrap(){
@@ -125,6 +139,7 @@ int main(int argc, char *argv[]) {
     for(i = 0; i < argc; i++) {
         printf("argv[%d] = %s\n", i, argv[i]);
     }
+    filecount = argc - 1;
 
     if(argc > 1) {
         for(i = 1; i < argc; i++) {
@@ -145,7 +160,6 @@ int main(int argc, char *argv[]) {
     }
     
     // REPL
-    yyin = stdin;
     yylex();
 
     return 0;
