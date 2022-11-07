@@ -67,14 +67,19 @@ void lex_error(char*);
 "**"            { lex_print("OP_DBLMULT"); }
 ","             { lex_print("OP_COMMA"); }
 
-"\""	        { is_string(); /* Strings */ }
-LETTER?\"(\\.|[^\\"\n])*\"	{ lex_print("STRING_LITERAL"); }
+"\""	                { is_string(); /* Strings */ }
 
-[{LETTER}][{LETTER}0-9]*  { lex_print("IDENTIFIER");  /* Identifiers */ }
+[a-zA-Z_][a-zA-Z0-9_]*    { lex_print("IDENTIFIER");  /* Identifier */ }
+[1-9][0-9]*|[0-9]    { lex_print("VALUEI");  /* Unsigned integer */ }
+([1-9][0-9]*)+f([1-9][0-9]*)+    { lex_print("VALUEF");  /* Unsigned fractions */ }
 
 [ \t\n]+        { /* remove whitespace */ }
-<<EOF>>         { return 0; /* End */ }
-.               { lex_print("Unrecognized token"); /* Other */ }
+<<EOF>>         { yyterminate(); /* End */ }
+
+[0]+[0-9]+                  { lex_error("Invalid integer"); }
+([0][0-9]*)f([0]+[0-9]*)     { lex_error("Invalid fraction"); }
+[0-9]+[a-zA-Z_]+            { lex_error("Invalid identifier"); }
+.               { lex_error("unrecognized token"); /* Other */ }
 %%
 
 void lex_print(char *name) {
@@ -98,7 +103,7 @@ void is_string() {
 }
 
 void lex_error(char *msg) {
-    printf("Lexical Error: %s\n", msg);
+    printf("Lexical Error: %s.\n", msg);
 }
 
 // Runs after lex initialization
