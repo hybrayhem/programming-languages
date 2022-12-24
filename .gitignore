@@ -3,5 +3,4 @@ G__Syntax - Concrete Syntax.pdf
 *.zip
 .vscode
 
-flex/gpp_lexer copy.l
-flex/demo copy.gpp
+gpp
