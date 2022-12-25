@@ -1,21 +1,17 @@
 /*************** DEFINITIONS ******************/
 %{
-// TODO: Update lexical syntax
 /*
 The G++ Language
 
-Keywords: and, or, not, equal, less, nil, list, append, concat, set, deffun, for, if, exit, load, disp, true, false 
-(KW_AND, KW_OR, KW_NOT, KW_EQUAL, KW_LESS, KW_NIL, KW_LIST, KW_APPEND, KW_CONCAT, KW_SET, KW_DEFFUN, KW_FOR, KW_IF, KW_EXIT, KW_LOAD, KW_DISP, KW_TRUE, KW_FALSE)
-Operators: + - / * ( ) ** “ “ ,
-(OP_PLUS, OP_MINUS, OP_DIV, OP_DIV2, OP_MULT, OP_OP, OP_CP, OP_DBLMULT, OP_OC, OP_CC, OP_COMMA)
+Keywords: and, or, not, eq, gt, nil, set, defvar, deffun, while, if, load, disp, true, false
+(KW_AND, KW_OR, KW_NOT, KW_EQ, KW_GT, KW_NIL, KW_SET, KW_DEFV, KW_DEFF, KW_WHILE, KW_IF, KW_EXIT, KW_LOAD, KW_DISP, KW_TRUE, KW_FALSE)
+Operators: + - / * ( ) ,
+(OP_PLUS, OP_MINUS, OP_DIV, OP_MULT, OP_OP, OP_CP, OP_COMMA)
 Comment: Line or part of the line starting with ;;
 (COMMENT)
 
-Unsigned integers: any combination of digits with no leading zeros on the left. 0 is considered an instance.
-(VALUEI)
 Unsigned fractions: two unsigned integers separated by the character “f”. E.g., 123f12 is the fraction 123/12
 (VALUEF)
-String: any combination of characters enclosed in double quotes. E.g., “G++ is best” is a string.
 
 Identifier: Any combination of alphabetical characters, digits and “_” with no leading digit.
 (IDENTIFIER)
@@ -30,7 +26,6 @@ FILE *src;
 char *filename;
 int in_file = 0;
 
-void is_string();
 void lex_print(char*);
 void lex_error(char*);
 %}
@@ -50,15 +45,13 @@ UINT            ({POSITIVENUM}|{DIGIT})
 "and"           { lex_print("KW_AND");  /* Keywords */ }
 "or"            { lex_print("KW_OR"); }
 "not"           { lex_print("KW_NOT"); }
-"equal"         { lex_print("KW_EQUAL"); }
-"less"          { lex_print("KW_LESS"); }
+"eq"            { lex_print("KW_EQ"); }
+"gt"            { lex_print("KW_GT"); }
 "nil"           { lex_print("KW_NIL"); }
-"list"          { lex_print("KW_LIST"); }
-"append"        { lex_print("KW_APPEND"); }
-"concat"        { lex_print("KW_CONCAT"); }
 "set"           { lex_print("KW_SET"); }
-"deffun"        { lex_print("KW_DEFFUN"); }
-"for"           { lex_print("KW_FOR"); }
+"defvar"        { lex_print("KW_DEFV"); }
+"deffun"        { lex_print("KW_DEFF"); }
+"while"         { lex_print("KW_WHILE"); }
 "if"            { lex_print("KW_IF"); }
 "exit"          { lex_print("KW_EXIT"); }
 "load"          { lex_print("KW_LOAD"); }
@@ -72,12 +65,9 @@ UINT            ({POSITIVENUM}|{DIGIT})
 "*"             { lex_print("OP_MULT"); }
 "("             { lex_print("OP_OP"); }
 ")"             { lex_print("OP_CP"); }
-"**"            { lex_print("OP_DBLMULT"); }
 ","             { lex_print("OP_COMMA"); }
 
-"\""	        { is_string(); /* Strings */ }
-
-{LETTER}({LETTER}|{DIGIT})*          { lex_print("IDENTIFIER");  /* Identifier */ }
+{LETTER}({LETTER}|{DIGIT})*     { lex_print("IDENTIFIER");  /* Identifier */ }
 {UINT}                          { lex_print("VALUEI");  /* Unsigned integer */ }
 {UINT}f{UINT}                   { lex_print("VALUEF");  /* Unsigned fractions */ }
 
@@ -106,24 +96,6 @@ UINT            ({POSITIVENUM}|{DIGIT})
 /* TODO: lex_return */
 void lex_print(char *name) {
     printf("%s : %s\n", yytext, name);
-}
-
-void is_string() {
-	char c, prev = 0;
-    int i, counter = 0;
-
-    lex_print("OP_OC");
-
-	while ((c = input()) != '\n') {
-        if(c != '"') printf("%c", c);
-
-		if (c == '"' && prev != '\\') {
-            printf(": VALUESTR\n");
-			return lex_print("OP_CC");
-        }
-		prev = c;
-	}
-	lex_error("Not ending string");
 }
 
 void lex_error(char *msg) {
