@@ -4,3 +4,5 @@ G__Syntax - Concrete Syntax.pdf
 .vscode
 
 gpp
+flex/demo.gpp
+flex/demo_extended.gpp

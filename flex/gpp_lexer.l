@@ -1,8 +1,10 @@
 DIGIT			[0-9]
+/* NUM0_99 ([0]+[0-9]+) */
 LETTER			[a-zA-Z_]
 ALPHANUMERIC    ({LETTER}|{DIGIT})
 
 %{
+// TODO: Update lexical syntax
 /*
 The G++ Language
 
@@ -29,12 +31,11 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 #include <stdlib.h>
 
 FILE *src;
-int filecount;
-// int is_quote_open = 0;
+char *filename;
+int in_file = 0;
 
-void lex_print(char*);
-// void check_quotes();
 void is_string();
+void lex_print(char*);
 void lex_error(char*);
 %}
 
@@ -78,26 +79,25 @@ void lex_error(char*);
 
 [ \t\n]+                        { /* remove whitespace */ }
 <<EOF>>                         { 
-                                    /* End */
-                                    // printf("filecount %d\n", filecount);
-                                    if(filecount > 0){
-                                        filecount--;
-                                    }
-                                    else{
+                                    /* Switch to REPL */
+                                    if(in_file){
+                                        in_file = 0;
+
                                         yyin=stdin;
                                         YY_NEW_FILE;
-                                    }
-                                        
+                                    } 
+                                    /* End */
                                 }    
 
-[0]+[0-9]+                       { lex_error("Invalid integer"); }
-[0-9]+[a-zA-Z_]+                 { lex_error("Invalid identifier"); }
-([0]+[0-9]+)f([1-9][0-9]*|[0-9]) { lex_error("Invalid fraction"); }
-([1-9][0-9]*|[0-9])f([0]+[0-9]+) { lex_error("Invalid fraction"); }
+[0]+[0-9]+                       { lex_error("Invalid integer. Multiple leading zeros"); }
+[0-9]+[a-zA-Z_]+                 { lex_error("Invalid identifier. Identifiers can't start with number"); }
+([0]+[0-9]+)f([1-9][0-9]*|[0-9]) { lex_error("Invalid fraction. More than one leading zero in numerator"); }
+([1-9][0-9]*|[0-9])f([0]+[0-9]+) { lex_error("Invalid fraction. More than one leading zero in denominator"); }
 
 .                                { lex_error("Unrecognized token"); /* Other */ }
 %%
 
+/* TODO: lex_return */
 void lex_print(char *name) {
     printf("%s : %s\n", yytext, name);
 }
@@ -124,11 +124,6 @@ void lex_error(char *msg) {
     printf("Lexical Error. %s: '%s'.\n", msg, yytext);
 }
 
-// void check_quotes() {
-//     if(is_quote_open) {
-//         lex_error("Not ending string");
-//     }
-// }
 
 // Runs after lex initialization
 int yywrap(){
@@ -137,24 +132,22 @@ int yywrap(){
 int main(int argc, char *argv[]) {
     int i;
     for(i = 0; i < argc; i++) {
-        printf("argv[%d] = %s\n", i, argv[i]);
+        printf("argv[%d] = %s; ", i, argv[i]); // for debug
     }
-    filecount = argc - 1;
 
     if(argc > 1) {
-        for(i = 1; i < argc; i++) {
-            src = fopen(argv[i], "r");
-            if (src == NULL) {
-                printf("Couldn't open file: %s\n", argv[i]);
-                continue;
-            }
-            
-            printf("\n\n\nLexing %s...\n\n", argv[i]);
+        in_file = 1;
+        filename = argv[1];
+        src = fopen(filename, "r");
+        
+        if (src == NULL) {
+            printf("Couldn't open file: %s\n", filename);
+        } else {
+            printf("\n\n\nLexing %s...\n\n", filename);
 
             yyin = src;
             yylex();
             fclose(src);
-
             printf("\n");
         }
     }
