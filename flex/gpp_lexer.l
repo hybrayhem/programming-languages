@@ -3,8 +3,8 @@
 /*
 The G++ Language
 
-Keywords: and, or, not, eq, gt, nil, set, defvar, deffun, while, if, load, disp, true, false
-(KW_AND, KW_OR, KW_NOT, KW_EQ, KW_GT, KW_NIL, KW_SET, KW_DEFV, KW_DEFF, KW_WHILE, KW_IF, KW_EXIT, KW_LOAD, KW_DISP, KW_TRUE, KW_FALSE)
+Keywords: and, or, not, eq, gt, set, defvar, deffun, while, if, true, false
+(KW_AND, KW_OR, KW_NOT, KW_EQ, KW_GT, KW_SET, KW_DEFV, KW_DEFF, KW_WHILE, KW_IF, KW_EXIT, KW_TRUE, KW_FALSE)
 Operators: + - / * ( ) ,
 (OP_PLUS, OP_MINUS, OP_DIV, OP_MULT, OP_OP, OP_CP, OP_COMMA)
 Comment: Line or part of the line starting with ;;
@@ -41,15 +41,12 @@ UINT            ({POSITIVENUM}|{DIGIT})
 "not"           { lex_print("KW_NOT"); }
 "eq"            { lex_print("KW_EQ"); }
 "gt"            { lex_print("KW_GT"); }
-"nil"           { lex_print("KW_NIL"); }
 "set"           { lex_print("KW_SET"); }
 "defvar"        { lex_print("KW_DEFV"); }
 "deffun"        { lex_print("KW_DEFF"); }
 "while"         { lex_print("KW_WHILE"); }
 "if"            { lex_print("KW_IF"); }
 "exit"          { lex_print("KW_EXIT"); }
-"load"          { lex_print("KW_LOAD"); }
-"disp"          { lex_print("KW_DISP"); }
 "true"          { lex_print("KW_TRUE"); }
 "false"         { lex_print("KW_FALSE"); }
 
