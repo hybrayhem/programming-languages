@@ -20,11 +20,6 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 
 /* C Declarations */
 #include <stdio.h>
-#include <stdlib.h>
-
-FILE *src;
-char *filename;
-int in_file = 0;
 
 void lex_print(char*);
 void lex_error(char*);
@@ -37,9 +32,8 @@ ALPHANUMERIC    ({LETTER}|{DIGIT})
 POSITIVENUM     ([1-9][0-9]*)
 UINT            ({POSITIVENUM}|{DIGIT})
 
-%%
+%%  /*************** RULES ******************/
 
-/*************** RULES ******************/
 ";;"[^\n]*      { lex_print("COMMENT");  /* Comments */ }
 
 "and"           { lex_print("KW_AND");  /* Keywords */ }
@@ -72,16 +66,7 @@ UINT            ({POSITIVENUM}|{DIGIT})
 {UINT}f{UINT}                   { lex_print("VALUEF");  /* Unsigned fractions */ }
 
 [ \t\n]+                        { /* remove whitespace */ }
-<<EOF>>                         { 
-                                    /* Switch to REPL */
-                                    if(in_file){
-                                        in_file = 0;
-
-                                        yyin=stdin;
-                                        YY_NEW_FILE;
-                                    } 
-                                    /* End */
-                                }    
+<<EOF>>                         { /* End */ }    
 
 [0]+[0-9]+                       { lex_error("Invalid integer. Multiple leading zeros"); }
 {DIGIT}+{LETTER}+                { lex_error("Invalid identifier. Identifiers can't start with number"); }
@@ -90,9 +75,8 @@ UINT            ({POSITIVENUM}|{DIGIT})
 
 .                                { lex_error("Unrecognized token"); /* Other */ }
 
-%%
+%%  /*************** FUNCTIONS ******************/
 
-/*************** FUNCTIONS ******************/
 /* TODO: lex_return */
 void lex_print(char *name) {
     printf("%s : %s\n", yytext, name);
@@ -108,28 +92,6 @@ int yywrap(){
     return 1;
 }
 int main(int argc, char *argv[]) {
-    int i;
-    for(i = 0; i < argc; i++) {
-        printf("argv[%d] = %s; ", i, argv[i]); // for debug
-    }
-
-    if(argc > 1) {
-        in_file = 1;
-        filename = argv[1];
-        src = fopen(filename, "r");
-        
-        if (src == NULL) {
-            printf("Couldn't open file: %s\n", filename);
-        } else {
-            printf("\n\n\nLexing %s...\n\n", filename);
-
-            yyin = src;
-            yylex();
-            fclose(src);
-            printf("\n");
-        }
-    }
-    
     // REPL
     yylex();
 
