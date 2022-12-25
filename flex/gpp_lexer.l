@@ -1,8 +1,4 @@
-DIGIT			[0-9]
-/* NUM0_99 ([0]+[0-9]+) */
-LETTER			[a-zA-Z_]
-ALPHANUMERIC    ({LETTER}|{DIGIT})
-
+/*************** DEFINITIONS ******************/
 %{
 // TODO: Update lexical syntax
 /*
@@ -26,7 +22,7 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 
 */
 
-// Declarations
+/* C Declarations */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,8 +35,16 @@ void lex_print(char*);
 void lex_error(char*);
 %}
 
+/* Lex Declarations */
+DIGIT			[0-9]
+LETTER			[a-zA-Z_]
+ALPHANUMERIC    ({LETTER}|{DIGIT})
+POSITIVENUM     ([1-9][0-9]*)
+UINT            ({POSITIVENUM}|{DIGIT})
 
 %%
+
+/*************** RULES ******************/
 ";;"[^\n]*      { lex_print("COMMENT");  /* Comments */ }
 
 "and"           { lex_print("KW_AND");  /* Keywords */ }
@@ -73,9 +77,9 @@ void lex_error(char*);
 
 "\""	        { is_string(); /* Strings */ }
 
-[a-zA-Z_][a-zA-Z0-9_]*          { lex_print("IDENTIFIER");  /* Identifier */ }
-[1-9][0-9]*|[0-9]               { lex_print("VALUEI");  /* Unsigned integer */ }
-([1-9][0-9]*|[0-9])f([1-9][0-9]*|[0-9])   { lex_print("VALUEF");  /* Unsigned fractions */ }
+{LETTER}({LETTER}|{DIGIT})*          { lex_print("IDENTIFIER");  /* Identifier */ }
+{UINT}                          { lex_print("VALUEI");  /* Unsigned integer */ }
+{UINT}f{UINT}                   { lex_print("VALUEF");  /* Unsigned fractions */ }
 
 [ \t\n]+                        { /* remove whitespace */ }
 <<EOF>>                         { 
@@ -90,13 +94,15 @@ void lex_error(char*);
                                 }    
 
 [0]+[0-9]+                       { lex_error("Invalid integer. Multiple leading zeros"); }
-[0-9]+[a-zA-Z_]+                 { lex_error("Invalid identifier. Identifiers can't start with number"); }
-([0]+[0-9]+)f([1-9][0-9]*|[0-9]) { lex_error("Invalid fraction. More than one leading zero in numerator"); }
-([1-9][0-9]*|[0-9])f([0]+[0-9]+) { lex_error("Invalid fraction. More than one leading zero in denominator"); }
+{DIGIT}+{LETTER}+                { lex_error("Invalid identifier. Identifiers can't start with number"); }
+([0]+[0-9]+)f{UINT}              { lex_error("Invalid fraction. More than one leading zero in numerator"); }
+{UINT}f([0]+[0-9]+)              { lex_error("Invalid fraction. More than one leading zero in denominator"); }
 
 .                                { lex_error("Unrecognized token"); /* Other */ }
+
 %%
 
+/*************** FUNCTIONS ******************/
 /* TODO: lex_return */
 void lex_print(char *name) {
     printf("%s : %s\n", yytext, name);
