@@ -1,54 +1,38 @@
-/* DECLARATIONS */
+/*************** DECLARATIONS ***************/
 
 %{
     /* C Declarations*/
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    // #include "gpp_lexer.c"
+    #include <ctype.h>
+    #include "gpp_lexer.c"
 
-    /* Custom function to print an operator*/
-    void print_operator(char op);
-
-    /* Variable to keep track of the position of the number in the input */
-    int pos=0;
+    void yyerror(const char *s);
+    int yylex();
+    int yywrap();
 
 %}
 
-/* YACC Declarations  */
+/* Lex Declarations */
 %token DIGIT
-%left '+' /* left associative, to remove shift reduce conflicts */
-%left '*' /* '*' is left associative and has higher precedence over '+' */
+%token COMMENT KW_AND KW_OR KW_NOT KW_EQ KW_GT KW_SET KW_DEFV KW_DEFF KW_WHILE KW_IF KW_EXIT KW_TRUE KW_FALSE  
+%token OP_PLUS OP_MINUS OP_DIV OP_MULT OP_OP OP_CP OP_COMMA
+%token IDENTIFIER VALUEF
+
+/* YACC Declarations  */
+%start INPUT
 
 %%
 
-/* RULES */
-start : expr '\n'		{exit(1);}
-      ;
-
-expr: expr '+' expr     {print_operator('+');}
-    | expr '*' expr     {print_operator('*');}
-    | '(' expr ')'
-    | DIGIT             {printf("NUM%d ",pos);}
-    ;
-
+/*************** RULES ***************/
+INPUT:
 %%
 
-/* AUXILIARY FUNCTIONS */
-
-void print_operator(char c){
-    switch(c){
-        case '+'  : printf("PLUS ");
-                    break;
-        case '*'  : printf("MUL ");
-                    break;
-    }
-    return;
-}
-
-yyerror(char const *s)
+/*************** FUNCTIONS ***************/
+yyerror(char const *msg)
 {
-    printf("yyerror %s",s);
+    printf("Error. %s: '%s'.\n", msg, yytext);
 }
 
 yylex(){

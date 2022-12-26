@@ -13,18 +13,19 @@ build-parser:
 
 build: build-lexer build-parser
 	@echo "Building gpp"
-	$(CC) -Iout out/gpp_lexer.c out/gpp_interpreter.c -o out/gpp
+	$(CC) -Iout out/gpp_lexer.c out/gpp_interpreter.c -o out/gpp 2> out/gpp.log
 
 run: build
 	@echo "Running gpp"
-	./gpp
+	out/gpp
 
 demo: build
 	@echo "Running gpp with demo program"
-	./gpp < demo/demo.gpp
+	out/gpp < demo/demo.gpp
 
 
 .PHONY: clean # prevent Make from confusing the 'clean' target with a file name
-clean:
-	$(RM) *.o *.c *.h gpp out/*
 # 	phony is unnecessary since we don't have a file named 'clean'
+clean:
+	$(RM) out/*
+#	$(RM) *.o *.c *.h gpp
