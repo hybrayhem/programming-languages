@@ -40,7 +40,7 @@ uint            ({positivenum}|{digit})
 
 %%  /*************** RULES ******************/
 
-";;"[^\n]*      { return COMMENT;  /* Comments */ }
+";;"(.*)      { return COMMENT;  /* Comments */ }
 
 "and"           { return KW_AND;  /* Keywords */ }
 "or"            { return KW_OR; }
@@ -85,20 +85,10 @@ uint            ({positivenum}|{digit})
 
 %%  /*************** FUNCTIONS ******************/
 
-void lex_error(char const *msg) {
-    printf("Syntax Error at line %d. %s: '%s'.\n", countln, msg, yytext);
-    /* exit(1); */
-}
-
 // Runs after lex initialization
 int yywrap(){}
 
-// Parse fraction from string "nfd" as double
-double parse_fractd(char const *str) {
-    int num, den;
-    num = atoi(str);
-    den = atoi(strchr(str, 'f') + 1);
-    printf("Fraction: %d/%d\n", num, den);
-    printf("Fraction as double: %f\n", (double) num / den);
-    return (double) num / den;
+void lex_error(char const *msg) {
+    printf("Syntax Error at line %d. %s: '%s'.\n", countln, msg, yytext);
+    /* exit(1); */
 }

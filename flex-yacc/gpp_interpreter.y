@@ -10,6 +10,9 @@
 
     int yylex();
     int yyerror(char*);
+
+    double parse_fractd(char const *);
+    double get_id_value(char const *);
 %}
 
 %union{
@@ -39,17 +42,21 @@
 %%
 
 /*************** RULES ***************/
-INPUT: EXP | INPUT EXP      { printf("EXP = %f\n", $1); }
+INPUT: EXP            { printf("EXP = %f\n", $1); }
+     | INPUT EXP      {}
      /* | FUNCTION {} */
 //      | EXPLIST  { printf("EXPLIST = %d\n", *($1)); }
+     | COMMENT        {}
+     | INPUT COMMENT  {}
+
 
 /* Expression: returns the value of last expression, always fraction */
-EXP: OP_OP OP_PLUS EXP EXP OP_CP        { printf("EXP1\n"); $$ = $3 + $4; }
-   | OP_OP OP_MINUS EXP EXP OP_CP       { printf("EXP2\n"); $$ = $3 - $4; }
-   | OP_OP OP_MULT EXP EXP OP_CP        { printf("EXP3\n"); $$ = $3 * $4; }
-   | OP_OP OP_DIV EXP EXP OP_CP         { printf("EXP4\n"); $$ = $3 / $4; }
-   | IDENTIFIER                         { printf("EXP5\n"); }
-   | VALUEF                             { printf("EXP6\n"); }
+EXP: OP_OP OP_PLUS EXP EXP OP_CP        { $$ = $3 + $4; /* printf("%f = %f + %f\n", $$, $3, $4); */ }
+   | OP_OP OP_MINUS EXP EXP OP_CP       { $$ = $3 - $4; /* printf("%f = %f - %f\n", $$, $3, $4); */ }
+   | OP_OP OP_MULT EXP EXP OP_CP        { $$ = $3 * $4; /* printf("%f = %f * %f\n", $$, $3, $4); */ }
+   | OP_OP OP_DIV EXP EXP OP_CP         { $$ = $3 / $4; /* printf("%f = %f / %f\n", $$, $3, $4); */ }
+   | IDENTIFIER                         { $$ = get_id_value($1); /* printf("%s : %f\n", $1, $$); */ }
+   | VALUEF                             { $$ = $1; /* printf("%f\n", $$); */ }
    /* | FCALL                              { printf("EXP7\n"); } */
    /* | ASG                                { printf("EXP8\n"); } */
 //   | OP_OP KW_IF EXPB EXPLIST EXPLIST OP_CP     { printf("EXP9\n"); }
@@ -92,4 +99,20 @@ int main(int argc, char **argv)
         yyparse();
     }
     return 0;
+}
+
+// Parse fraction from string "nfd" as double
+double parse_fractd(char const *str) {
+    int num, den;
+    num = atoi(str);
+    den = atoi(strchr(str, 'f') + 1);
+    // printf("> Fraction: %d/%d\n", num, den);
+    // printf("> Fraction as double: %f\n", (double) num / den);
+    return (double) num / den;
+}
+
+
+// Get identifier value by name from symbol table
+double get_id_value(char const *name) {
+    return 0.0;
 }
