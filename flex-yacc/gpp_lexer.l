@@ -63,8 +63,8 @@ uint            ({positivenum}|{digit})
 ")"             { return OP_CP; }
 ","             { return OP_COMMA; }
 
-{letter}({alphanumeric})*       { return IDENTIFIER;  /* Identifier */ }
-{uint}f{uint}                   { return VALUEF;  /* Unsigned fractions */ }
+{letter}({alphanumeric})*       { strcpy(yylval.str, yytext); return IDENTIFIER;  /* Identifier */ }
+{uint}f{uint}                   { strcpy(yylval.str, yytext); return VALUEF;  /* Unsigned fractions */ }
 
 [\n]                            { countln++; /* New line */ /* yylineno = yylineno + 1; */}    
 [ \t]+                          { /* remove whitespace */ }
@@ -86,7 +86,7 @@ uint            ({positivenum}|{digit})
 
 void lex_error(char const *msg) {
     printf("Syntax Error at line %d. %s: '%s'.\n", countln, msg, yytext);
-    exit(1);
+    /* exit(1); */
 }
 
 
