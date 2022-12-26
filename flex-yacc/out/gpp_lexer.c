@@ -1,6 +1,6 @@
-#line 2 "gpp_lexer.c"
+#line 2 "out/gpp_lexer.c"
 
-#line 4 "gpp_lexer.c"
+#line 4 "out/gpp_lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -163,8 +163,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -497,6 +516,12 @@ static const flex_int16_t yy_chk[179] =
       113,  113,  113,  113,  113,  113,  113,  113
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[31] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -534,13 +559,16 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 
 /* C Declarations */
 #include <stdio.h>
-#include <gpp_interpreter.h>
+#include "gpp_interpreter.h"
+
+extern YYSTYPE yylval;
+int countl = 0;
 
 char* lex_return(char*);
 void lex_error(char*);
-#line 542 "gpp_lexer.c"
+#line 570 "out/gpp_lexer.c"
 /* Lex Declarations */
-#line 544 "gpp_lexer.c"
+#line 572 "out/gpp_lexer.c"
 
 #define INITIAL 0
 
@@ -757,10 +785,10 @@ YY_DECL
 		}
 
 	{
-#line 64 "gpp_lexer.l"
+#line 69 "gpp_lexer.l"
 
 
-#line 764 "gpp_lexer.c"
+#line 792 "out/gpp_lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -806,6 +834,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -819,160 +857,160 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 66 "gpp_lexer.l"
+#line 71 "gpp_lexer.l"
 { lex_return("COMMENT");  /* Comments */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 68 "gpp_lexer.l"
+#line 73 "gpp_lexer.l"
 { lex_return("KW_AND");  /* Keywords */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 69 "gpp_lexer.l"
+#line 74 "gpp_lexer.l"
 { lex_return("KW_OR"); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 70 "gpp_lexer.l"
+#line 75 "gpp_lexer.l"
 { lex_return("KW_NOT"); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 71 "gpp_lexer.l"
+#line 76 "gpp_lexer.l"
 { lex_return("KW_EQ"); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 72 "gpp_lexer.l"
+#line 77 "gpp_lexer.l"
 { lex_return("KW_GT"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 73 "gpp_lexer.l"
+#line 78 "gpp_lexer.l"
 { lex_return("KW_SET"); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 74 "gpp_lexer.l"
+#line 79 "gpp_lexer.l"
 { lex_return("KW_DEFV"); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 75 "gpp_lexer.l"
+#line 80 "gpp_lexer.l"
 { lex_return("KW_DEFF"); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 76 "gpp_lexer.l"
+#line 81 "gpp_lexer.l"
 { lex_return("KW_WHILE"); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 77 "gpp_lexer.l"
+#line 82 "gpp_lexer.l"
 { lex_return("KW_IF"); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 78 "gpp_lexer.l"
+#line 83 "gpp_lexer.l"
 { lex_return("KW_EXIT"); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 79 "gpp_lexer.l"
+#line 84 "gpp_lexer.l"
 { lex_return("KW_TRUE"); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 80 "gpp_lexer.l"
+#line 85 "gpp_lexer.l"
 { lex_return("KW_FALSE"); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 82 "gpp_lexer.l"
+#line 87 "gpp_lexer.l"
 { lex_return("OP_PLUS");  /* Operators */ }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 83 "gpp_lexer.l"
+#line 88 "gpp_lexer.l"
 { lex_return("OP_MINUS"); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 84 "gpp_lexer.l"
+#line 89 "gpp_lexer.l"
 { lex_return("OP_DIV"); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 85 "gpp_lexer.l"
+#line 90 "gpp_lexer.l"
 { lex_return("OP_MULT"); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 86 "gpp_lexer.l"
+#line 91 "gpp_lexer.l"
 { lex_return("OP_OP"); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 87 "gpp_lexer.l"
+#line 92 "gpp_lexer.l"
 { lex_return("OP_CP"); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 88 "gpp_lexer.l"
+#line 93 "gpp_lexer.l"
 { lex_return("OP_COMMA"); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 90 "gpp_lexer.l"
+#line 95 "gpp_lexer.l"
 { lex_return("IDENTIFIER");  /* Identifier */ }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 91 "gpp_lexer.l"
+#line 96 "gpp_lexer.l"
 { lex_return("VALUEF");  /* Unsigned fractions */ }
 	YY_BREAK
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 93 "gpp_lexer.l"
+#line 98 "gpp_lexer.l"
 { /* remove whitespace */ }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 94 "gpp_lexer.l"
+#line 99 "gpp_lexer.l"
 { return 0; /* End */ }    
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 96 "gpp_lexer.l"
+#line 101 "gpp_lexer.l"
 { lex_error("Invalid integer. Multiple leading zeros"); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 97 "gpp_lexer.l"
+#line 102 "gpp_lexer.l"
 { lex_error("Invalid identifier. Identifiers can't start with number"); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 98 "gpp_lexer.l"
+#line 103 "gpp_lexer.l"
 { lex_error("Invalid fraction. More than one leading zero in numerator"); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 99 "gpp_lexer.l"
+#line 104 "gpp_lexer.l"
 { lex_error("Invalid fraction. More than one leading zero in denominator"); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 101 "gpp_lexer.l"
+#line 106 "gpp_lexer.l"
 { lex_error("Unrecognized token"); /* Other */ }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 104 "gpp_lexer.l"
+#line 109 "gpp_lexer.l"
 ECHO;
 	YY_BREAK
-#line 976 "gpp_lexer.c"
+#line 1014 "out/gpp_lexer.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1338,6 +1376,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1414,6 +1456,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1881,6 +1928,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -1975,7 +2025,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 104 "gpp_lexer.l"
+#line 109 "gpp_lexer.l"
 
 
 /* TODO: lex_return */
@@ -1998,5 +2048,5 @@ int yywrap(){
     yylex();
 
     return 0;
-}
+} */
 

@@ -2,8 +2,10 @@
 
 %{
     /* C Declarations*/
-    #include<stdio.h>
-    #include<stdlib.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    // #include "gpp_lexer.c"
 
     /* Custom function to print an operator*/
     void print_operator(char op);

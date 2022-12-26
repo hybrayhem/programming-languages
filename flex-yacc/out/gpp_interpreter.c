@@ -69,8 +69,10 @@
 #line 3 "gpp_interpreter.y"
 
     /* C Declarations*/
-    #include<stdio.h>
-    #include<stdlib.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    // #include "gpp_lexer.c"
 
     /* Custom function to print an operator*/
     void print_operator(char op);
@@ -79,7 +81,7 @@
     int pos=0;
 
 
-#line 83 "gpp_interpreter.c"
+#line 85 "out/gpp_interpreter.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -112,8 +114,8 @@
 
 /* Use api.header.include to #include this header
    instead of duplicating it here.  */
-#ifndef YY_YY_GPP_INTERPRETER_H_INCLUDED
-# define YY_YY_GPP_INTERPRETER_H_INCLUDED
+#ifndef YY_YY_OUT_GPP_INTERPRETER_H_INCLUDED
+# define YY_YY_OUT_GPP_INTERPRETER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -145,7 +147,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_GPP_INTERPRETER_H_INCLUDED  */
+#endif /* !YY_YY_OUT_GPP_INTERPRETER_H_INCLUDED  */
 
 
 
@@ -507,7 +509,7 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    24,    24,    27,    28,    29,    30
+       0,    26,    26,    29,    30,    31,    32
 };
 #endif
 
@@ -1297,31 +1299,31 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 24 "gpp_interpreter.y"
+#line 26 "gpp_interpreter.y"
                                 {exit(1);}
-#line 1303 "gpp_interpreter.c"
+#line 1305 "out/gpp_interpreter.c"
     break;
 
   case 3:
-#line 27 "gpp_interpreter.y"
+#line 29 "gpp_interpreter.y"
                         {print_operator('+');}
-#line 1309 "gpp_interpreter.c"
+#line 1311 "out/gpp_interpreter.c"
     break;
 
   case 4:
-#line 28 "gpp_interpreter.y"
+#line 30 "gpp_interpreter.y"
                         {print_operator('*');}
-#line 1315 "gpp_interpreter.c"
+#line 1317 "out/gpp_interpreter.c"
     break;
 
   case 6:
-#line 30 "gpp_interpreter.y"
+#line 32 "gpp_interpreter.y"
                         {printf("NUM%d ",pos);}
-#line 1321 "gpp_interpreter.c"
+#line 1323 "out/gpp_interpreter.c"
     break;
 
 
-#line 1325 "gpp_interpreter.c"
+#line 1327 "out/gpp_interpreter.c"
 
       default: break;
     }
@@ -1553,7 +1555,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 33 "gpp_interpreter.y"
+#line 35 "gpp_interpreter.y"
 
 
 /* AUXILIARY FUNCTIONS */

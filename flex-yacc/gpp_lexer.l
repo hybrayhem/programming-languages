@@ -20,11 +20,16 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 
 /* C Declarations */
 #include <stdio.h>
-#include <gpp_interpreter.h>
+#include "gpp_interpreter.h"
+
+extern YYSTYPE yylval;
+int countl = 0;
 
 char* lex_return(char*);
 void lex_error(char*);
 %}
+
+%option yylineno
 
 /* Lex Declarations */
 digit			[0-9]
@@ -123,4 +128,4 @@ int yywrap(){
     yylex();
 
     return 0;
-}
+} */
