@@ -110,7 +110,10 @@
 # define YYERROR_VERBOSE 0
 #endif
 
-
+/* Use api.header.include to #include this header
+   instead of duplicating it here.  */
+#ifndef YY_YY_GPP_INTERPRETER_H_INCLUDED
+# define YY_YY_GPP_INTERPRETER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -142,7 +145,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-
+#endif /* !YY_YY_GPP_INTERPRETER_H_INCLUDED  */
 
 
 
@@ -1296,29 +1299,29 @@ yyreduce:
   case 2:
 #line 24 "gpp_interpreter.y"
                                 {exit(1);}
-#line 1300 "gpp_interpreter.c"
+#line 1303 "gpp_interpreter.c"
     break;
 
   case 3:
 #line 27 "gpp_interpreter.y"
                         {print_operator('+');}
-#line 1306 "gpp_interpreter.c"
+#line 1309 "gpp_interpreter.c"
     break;
 
   case 4:
 #line 28 "gpp_interpreter.y"
                         {print_operator('*');}
-#line 1312 "gpp_interpreter.c"
+#line 1315 "gpp_interpreter.c"
     break;
 
   case 6:
 #line 30 "gpp_interpreter.y"
                         {printf("NUM%d ",pos);}
-#line 1318 "gpp_interpreter.c"
+#line 1321 "gpp_interpreter.c"
     break;
 
 
-#line 1322 "gpp_interpreter.c"
+#line 1325 "gpp_interpreter.c"
 
       default: break;
     }

@@ -2,7 +2,7 @@ target: run
 
 build:
 	@echo "Building parser"
-	yacc -o gpp_interpreter.c gpp_interpreter.y
+	yacc -o gpp_interpreter.c gpp_interpreter.y -d
 	$(CC) gpp_interpreter.c -o gpp
 
 run: build
