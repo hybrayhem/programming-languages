@@ -11,9 +11,9 @@ build-parser:
 	yacc -o out/gpp_interpreter.c gpp_interpreter.y -d -v
 
 
-build: build-lexer build-parser
+build: build-parser build-lexer
 	@echo "Building gpp"
-	$(CC) -Iout out/gpp_lexer.c out/gpp_interpreter.c -o out/gpp 2> out/gpp.log
+	$(CC) out/gpp_lexer.c out/gpp_interpreter.c -o out/gpp 2> out/gpp.log
 
 run: build
 	@echo "Running gpp"

@@ -21,11 +21,10 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 /* C Declarations */
 #include "gpp_interpreter.h"
 
-extern YYSTYPE yylval;
-int countl = 0;
+void lex_error(char const*);
 
-void* lex_return(char*);
-void lex_error(char*);
+int countln = 1;
+extern YYSTYPE yylval;
 %}
 
 %option yylineno
@@ -40,34 +39,34 @@ uint            ({positivenum}|{digit})
 
 %%  /*************** RULES ******************/
 
-";;"[^\n]*      { lex_return(COMMENT);  /* Comments */ }
+";;"[^\n]*      { return COMMENT;  /* Comments */ }
 
-"and"           { lex_return(KW_AND);  /* Keywords */ }
-"or"            { lex_return(KW_OR); }
-"not"           { lex_return(KW_NOT); }
-"eq"            { lex_return(KW_EQ); }
-"gt"            { lex_return(KW_GT); }
-"set"           { lex_return(KW_SET); }
-"defvar"        { lex_return(KW_DEFV); }
-"deffun"        { lex_return(KW_DEFF); }
-"while"         { lex_return(KW_WHILE); }
-"if"            { lex_return(KW_IF); }
-"exit"          { lex_return(KW_EXIT); }
-"true"          { lex_return(KW_TRUE); }
-"false"         { lex_return(KW_FALSE); }
+"and"           { return KW_AND;  /* Keywords */ }
+"or"            { return KW_OR; }
+"not"           { return KW_NOT; }
+"eq"            { return KW_EQ; }
+"gt"            { return KW_GT; }
+"set"           { return KW_SET; }
+"defvar"        { return KW_DEFV; }
+"deffun"        { return KW_DEFF; }
+"while"         { return KW_WHILE; }
+"if"            { return KW_IF; }
+"exit"          { return KW_EXIT; }
+"true"          { return KW_TRUE; }
+"false"         { return KW_FALSE; }
 
-"+"             { lex_return(OP_PLUS);  /* Operators */ }
-"-"             { lex_return(OP_MINUS); }
-"/"             { lex_return(OP_DIV); }
-"*"             { lex_return(OP_MULT); }
-"("             { lex_return(OP_OP); }
-")"             { lex_return(OP_CP); }
-","             { lex_return(OP_COMMA); }
+"+"             { return OP_PLUS;  /* Operators */ }
+"-"             { return OP_MINUS; }
+"/"             { return OP_DIV; }
+"*"             { return OP_MULT; }
+"("             { return OP_OP; }
+")"             { return OP_CP; }
+","             { return OP_COMMA; }
 
-{letter}({alphanumeric})*       { lex_return(IDENTIFIER);  /* Identifier */ }
-{uint}f{uint}                   { lex_return(VALUEF);  /* Unsigned fractions */ }
+{letter}({alphanumeric})*       { return IDENTIFIER;  /* Identifier */ }
+{uint}f{uint}                   { return VALUEF;  /* Unsigned fractions */ }
 
-[\n]                            { countl++; /* New line */ /* yylineno = yylineno + 1; */}    
+[\n]                            { countln++; /* New line */ /* yylineno = yylineno + 1; */}    
 [ \t]+                          { /* remove whitespace */ }
 <<EOF>>                         { return 0; /* End */ }    
 
@@ -85,15 +84,11 @@ uint            ({positivenum}|{digit})
 
 %%  /*************** FUNCTIONS ******************/
 
-void* lex_return(char const *name) {
-    printf("%s : %s\n", yytext, name);
-    return name;
-}
-
 void lex_error(char const *msg) {
-    printf("Syntax Error. %s: '%s'.\n", msg, yytext);
+    printf("Syntax Error at line %d. %s: '%s'.\n", countln, msg, yytext);
+    exit(1);
 }
 
 
 // Runs after lex initialization
-int yywrap(){ return 1; }
+int yywrap(){}
