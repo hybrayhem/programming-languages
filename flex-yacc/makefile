@@ -1,16 +1,19 @@
 LEX = lex # not flex
+YACC = yacc
 
 target: run
+
+
+build-parser:
+	@echo "Building parser"
+	$(YACC) -o out/gpp_interpreter.c gpp_interpreter.y -d -v
 
 build-lexer:
 	@echo "Building lexer"
 	$(LEX) -o out/gpp_lexer.c gpp_lexer.l
 
-build-parser:
-	@echo "Building parser"
-	yacc -o out/gpp_interpreter.c gpp_interpreter.y -d -v
 
-
+# GPP Section
 build: build-parser build-lexer
 	@echo "Building gpp"
 	$(CC) out/gpp_lexer.c out/gpp_interpreter.c -o out/gpp 2> out/gpp.log

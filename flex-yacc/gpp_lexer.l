@@ -21,10 +21,11 @@ Identifier: Any combination of alphabetical characters, digits and “_” with 
 /* C Declarations */
 #include "gpp_interpreter.h"
 
-void lex_error(char const*);
-
 int countln = 1;
 extern YYSTYPE yylval;
+
+void lex_error(char const *);
+double parse_fractd(char const *);
 %}
 
 %option yylineno
@@ -64,7 +65,7 @@ uint            ({positivenum}|{digit})
 ","             { return OP_COMMA; }
 
 {letter}({alphanumeric})*       { strcpy(yylval.str, yytext); return IDENTIFIER;  /* Identifier */ }
-{uint}f{uint}                   { strcpy(yylval.str, yytext); return VALUEF;  /* Unsigned fractions */ }
+{uint}f{uint}                   { yylval.fnum = parse_fractd(yytext); return VALUEF;  /* Unsigned fractions */ }
 
 [\n]                            { countln++; /* New line */ /* yylineno = yylineno + 1; */}    
 [ \t]+                          { /* remove whitespace */ }
@@ -89,6 +90,15 @@ void lex_error(char const *msg) {
     /* exit(1); */
 }
 
-
 // Runs after lex initialization
 int yywrap(){}
+
+// Parse fraction from string "nfd" as double
+double parse_fractd(char const *str) {
+    int num, den;
+    num = atoi(str);
+    den = atoi(strchr(str, 'f') + 1);
+    printf("Fraction: %d/%d\n", num, den);
+    printf("Fraction as double: %f\n", (double) num / den);
+    return (double) num / den;
+}
