@@ -25,17 +25,26 @@ connection(X, Y, C) :-
     | 
     schedule(Y, X, C).
 
+write_connections(City) :- % write all connections of city
+    connection(City, X, C),
+    format('From ~w, there is a route to ~w with cost ~w.~n', [City, X, C]), fail. 
+    % fail to backtrack all solutions
+
+% after backtrack ends, return true
+query(City) :-
+    write_connections(City) | true.
+
 %
 %%% main %%%
 %
 main :- 
     write('Flight Graph'), nl,
 
-    connection(canakkale, X, C).
+    query(canakkale), nl,
     % X = erzincan,
     % C = 6 ;
 
-    connection(istanbul, X, C).
+    query(istanbul), nl,
     % X = ankara,
     % C = 1 ;
     % X = rize,
@@ -43,7 +52,7 @@ main :-
     % X = izmir,
     % C = 2.
 
-    connection(kayseri, X, C).
+    query(kayseri), nl.
     % X = antalya,
     % C = 4 ;
     % X = ankara,
