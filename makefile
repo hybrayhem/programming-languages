@@ -1,8 +1,9 @@
 target: run
 
-run:
-	swipl experts_system.pl
-#	swipl -q -g main -o experts_system -c experts_system.pl
+run: part1 part2
 
-# run: build
-# 	./experts_system
+part1:
+	swipl -s expert_system.pl -g main -t halt
+
+part2:
+	swipl -s flights.pl -g main -t halt

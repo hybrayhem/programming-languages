@@ -1,1 +1,2 @@
-loves(romeo, juliet).
+main :- 
+    write('Expert System'), nl.
