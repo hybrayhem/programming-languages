@@ -27,8 +27,8 @@ connection(X, Y, C) :-
 
 write_connections(City) :- % write all connections of city
     connection(City, X, C),
-    format('From ~w, there is a route to ~w with cost ~w.~n', [City, X, C]), fail. 
-    % fail to backtrack all solutions
+    format('From ~w, there is a route to ~w with cost ~w.~n', [City, X, C]),
+    fail. % fail to backtrack all solutions
 
 % after backtrack ends, return true
 query(City) :-
