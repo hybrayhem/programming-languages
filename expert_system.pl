@@ -2,8 +2,8 @@
 :- dynamic(room/4).
 :- dynamic(course/4).
 :- dynamic(occupe/3).
-:- dynamic(instructor/3).
-:- dynamic(student/2).
+:- dynamic(instructor/5).
+:- dynamic(student/4).
 
 %
 %%% Knowledge Base %%%
@@ -122,6 +122,14 @@ add_student(ID, Name, Disability) :-
     assert(student(ID, Name, Disability, [])), 
     write('Student added!').
 
+enroll_student(StudentID, Course) :-
+    student(StudentID, Name, Disability, StudentCourses),
+    course(Course, _, _, _),
+    check_enrollment(StudentID, Course),
+    retract(student(StudentID, _, _, _)),
+    assert(student(StudentID, Name, Disability, [Course|StudentCourses])),
+    write('Student enrolled!').
+
 remove_student(ID) :- 
     retract(student(ID, _, _, _)), 
     write('Student removed!').
@@ -166,6 +174,11 @@ remove_room(ID) :-
 
 
 % Occupation
+print_occupations :-
+    occupe(Room, Course, Weektime), 
+    format('~w ~w ~w~n', [Room, Course, Weektime]), 
+    fail.
+
 occupy_room(Room, Course, weektime(Start, End, Day)) :-
     occupe(Room, Course, weektime(X, Y, Day)),
     (X >= Start, X =< End) | (Y >= Start, Y =< End),
