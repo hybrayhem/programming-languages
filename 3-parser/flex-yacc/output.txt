@@ -1,0 +1,28 @@
+;; demo.gpp
+(+ 4f8 1f2)
+> 1.000000
+(- 3f2 2f2)
+> 0.500000
+(* 2f5 3f5)
+> 0.240000
+(/ 3f5 2f5)
+> 1.500000
+48f3
+> 16.000000
+my_id
+> 0.000000
+0
+Syntax Error at line 9. Unrecognized token: '0'.
+00f8
+Syntax Error at line 13. Invalid fraction. More than one leading zero in numerator: '00f8'.
+12f002
+Syntax Error at line 14. Invalid fraction. More than one leading zero in denominator: '12f002'.
+005
+Syntax Error at line 15. Invalid integer. Multiple leading zeros: '005'.
+test_identifier
+> 0.000000
+test_identifier2
+> 0.000000
+3rd_identifier
+Syntax Error at line 18. Invalid identifier. Identifiers can't start with number: '3rd_identifier'.
+

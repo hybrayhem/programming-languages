@@ -1,0 +1,39 @@
+;; demo.gpp
+(deffun sumup (x)
+(if (equal x 0)
+1
+(+ x (sumup (- x 1)))
+)
+)
+
+;; list test
+(list 1 2 123f12)
+
+;; lisp
+;;
+;;
+;;
+;;
+;;
+(defun main()
+	(setq str (getLine))
+	(if (eq str nil)
+		(return-from main 0)
+		)
+	(setq ret_value (processLine str))
+	(if ( or (string= ret_value "SYNTAX_ERROR")(string= ret_value "KW_EXIT") )
+		(return-from main 1)
+		(newLineAndMain))
+	)
+
+;;
+;;
+;;
+;;
+;;
+;;
+"
+"casdfvgas"
+merhaba"
+"merhaba asdgr
+asdg merhaba"
