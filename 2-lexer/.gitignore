@@ -1,0 +1,6 @@
+Homework 2.pdf
+*.zip
+.vscode
+
+flex/gpp_lexer copy.l
+flex/demo copy.gpp
