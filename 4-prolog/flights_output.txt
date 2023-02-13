@@ -1,0 +1,10 @@
+swipl -s flights.pl -g main -t halt
+Flight Graph
+From canakkale, there is a route to erzincan with cost 6.
+
+From istanbul, there is a route to ankara with cost 1.
+From istanbul, there is a route to rize with cost 4.
+From istanbul, there is a route to izmir with cost 2.
+
+From kayseri, there is a route to antalya with cost 4.
+From kayseri, there is a route to ankara with cost 2.

@@ -1,0 +1,168 @@
+?- [expert_system].
+true.
+
+?- print_students.
+1 ali false [eng151,cse241,cse341,cse343]
+2 veli false [eng151,cse341]
+3 ayse true [eng151,cse341,cse343]
+4 fatma false [cse241,cse341]
+5 ahmet false [cse241,cse343]
+6 mehmet false [eng151,cse341,cse343]
+7 zeynep true [cse241,cse343]
+8 hasan false [eng151,cse341]
+9 huseyin false [cse241,cse341]
+false.
+
+?- add_student(10, halil, false).
+Student added!
+true.
+
+?- print_students.
+1 ali false [eng151,cse241,cse341,cse343]
+2 veli false [eng151,cse341]
+3 ayse true [eng151,cse341,cse343]
+4 fatma false [cse241,cse341]
+5 ahmet false [cse241,cse343]
+6 mehmet false [eng151,cse341,cse343]
+7 zeynep true [cse241,cse343]
+8 hasan false [eng151,cse341]
+9 huseyin false [cse241,cse341]
+10 halil false []
+false.
+
+?- remove_student(8).
+Student removed!
+true.
+
+?- print_students.
+1 ali false [eng151,cse241,cse341,cse343]
+2 veli false [eng151,cse341]
+3 ayse true [eng151,cse341,cse343]
+4 fatma false [cse241,cse341]
+5 ahmet false [cse241,cse343]
+6 mehmet false [eng151,cse341,cse343]
+7 zeynep true [cse241,cse343]
+9 huseyin false [cse241,cse341]
+10 halil false []
+false.
+
+?- add_student(10, halil, false).
+Student already exists!
+true.
+
+?- enroll_student(10, eng151).
+Student enrolled!
+true .
+
+?- enroll_student(10, cse341).
+Student enrolled!
+true .
+
+?- print_students.
+1 ali false [eng151,cse241,cse341,cse343]
+2 veli false [eng151,cse341]
+3 ayse true [eng151,cse341,cse343]
+4 fatma false [cse241,cse341]
+5 ahmet false [cse241,cse343]
+6 mehmet false [eng151,cse341,cse343]
+7 zeynep true [cse241,cse343]
+9 huseyin false [cse241,cse341]
+10 halil false [cse341, eng151]
+false.
+
+?-
+?-
+?-
+?-
+?-
+
+?- print_courses.
+eng151 gokturk 120 [projector]
+cse241 akgul 90 [projector]
+cse341 genc 480 [projector]
+cse343 kalkan 90 [projector]
+false.
+
+?- add_course(cse485, ilhan, 50, [board]).
+Course added!
+true.
+
+?- print_courses.
+eng151 gokturk 120 [projector]
+cse241 akgul 90 [projector]
+cse341 genc 480 [projector]
+cse343 kalkan 90 [projector]
+cse485 ilhan 50 [board]
+false.
+
+?- remove_course(cse241).
+Course removed!
+true.
+
+?- print_courses.
+eng151 gokturk 120 [projector]
+cse341 genc 480 [projector]
+cse343 kalkan 90 [projector]
+cse485 ilhan 50 [board]
+false.
+
+?- 
+?- 
+?- 
+?- 
+?- 
+
+?- print_rooms.
+z23 120 hours(8,17) [projector,board]
+z06 60 hours(10,18) [projector,disabled_accessible]
+z10 90 hours(8,17) [projector,board,disabled_accessible]
+online 500 hours(_4774,_4776) [projector,board,disabled_accessible]
+false.
+
+?- add_room(z24,    120, hours( 8, 17), [projector, board]).
+Room added!
+true.
+
+?- print_rooms.
+z23 120 hours(8,17) [projector,board]
+z06 60 hours(10,18) [projector,disabled_accessible]
+z10 90 hours(8,17) [projector,board,disabled_accessible]
+online 500 hours(_9058,_9060) [projector,board,disabled_accessible]
+z24 120 hours(8,17) [projector,board]
+false.
+
+?- remove_room(online).
+Room removed!
+true.
+
+?- print_rooms.
+z23 120 hours(8,17) [projector,board]
+z06 60 hours(10,18) [projector,disabled_accessible]
+z10 90 hours(8,17) [projector,board,disabled_accessible]
+z24 120 hours(8,17) [projector,board]
+false.
+
+?-
+?-
+?-
+?-
+?-
+
+?- check_enrollment(1, eng151).
+true .
+
+?-
+?-
+?-
+?-
+?-
+
+
+
+?-
+?-
+?-
+?-
+?-
+
+
